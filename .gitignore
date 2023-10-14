@@ -2,3 +2,6 @@ assets/*
 scraped/*
 products.csv
 .DS_Store
+*.zip
+assets-*/*
+
