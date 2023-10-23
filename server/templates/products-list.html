@@ -1,0 +1,9 @@
+<div class="row row-cols-2 row-cols-md-5 gx-0 gx-md-3">
+    {% for i in range(products|length) %}
+    <div class="col mb-4" style="padding-right: 0; padding-left: 0; margin-bottom: 0 !important; ">
+        {% with product=products[i] %}
+        {% include 'product-view.html' %}
+        {% endwith %}
+    </div>
+    {% endfor %}
+</div>

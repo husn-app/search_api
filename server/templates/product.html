@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-2 mt-2 px-0">
+    {% with query='' %}
+    {% include "search-bar.html"%}
+    {% endwith %}
+</div>
+
+{% with product=current_product %}
+{% include 'product-view.html' %}
+{% endwith %}
+
+
+{% include 'products-list.html' %}
+{% endblock %}

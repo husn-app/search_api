@@ -1,0 +1,41 @@
+<style>
+    .product-name {
+        height: 1.9em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        /* number of lines to show */
+        -webkit-box-orient: vertical;
+    }
+</style>
+
+<div class="card h-100" style="border: 0 !important;">
+    <!-- Product Image  -->
+    <a href="/product/{{ product.index }}"><img class="card-img-top" src="{{ product['searchImage'] }}"
+            alt="{{ product['title'] }}"></a>
+
+    <div class="card-body text-left">
+        <!-- Product Brand and name -->
+        <h6 class="text-md mb-0" style="color: #ff69b4;">{{ product['brand'] }}</h6>
+        {% set product_name = product['product'].replace(product['brand'], '').replace('Men',
+        '').replace('Women', '') %}
+        <div class = "product-name">
+            <h5 class="mb-0" style="font-size: 12px; color: #808080;">{{ product_name }}</h5>
+        </div>
+
+        <!-- Product Original Url -->
+        <a href="https://myntra.com/{{ product['landingPageUrl'] }}">
+            <img src="https://logosarchive.com/wp-content/uploads/2021/12/Myntra-icon-logo.svg"
+                alt="View Product on Myntra" style="width: 32px; height: 32px;">
+        </a>
+        
+        <!-- Product Rating -->
+        {% if product['ratingCount'] > 0 %}
+        <span style="font-size: 10px; margin-left: 5px; border: 1px solid; border-radius: 5px; padding: 2px 5px;">
+            {{ '%.2f'|format(product['rating']) }} <span style="color:cornflowerblue;">&#9733;</span> | {{ product['ratingCount'] }}
+        </span>
+        {% endif %}
+        <!-- <p class="card-text" style="color: #333; font-size: 14px;">Score: {{ topk_scores[i] }}</p> -->
+    </div>
+</div>
