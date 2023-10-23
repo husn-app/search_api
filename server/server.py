@@ -23,19 +23,9 @@ def init_final_df():
     global final_df
     print('Reading products data...')
     start_time = time.time()
-    FILENAMES_DF_PATH = 'assets-224-filename-kaggle.csv'
-    filename_df = pd.read_csv('../' + FILENAMES_DF_PATH)
-    filename_df.head()
-    def get_file_path_from_url(url):
-        return '-'.join(url.split('/')[5:])
+    PRODUCTS_CSV_PATH = '../products_minimal.csv'
 
-    products_df = pd.read_csv('../products.csv')
-    products_df['filename'] = products_df['searchImage'].apply(get_file_path_from_url)
-    products_df = products_df.drop(columns=['Unnamed: 0'])
-
-
-    final_df = pd.merge(filename_df, products_df, left_on='0', right_on='filename', how='left').drop_duplicates(subset='filename', keep='first').reset_index()
-    final_df['index'] = final_df.index
+    final_df = pd.read_csv(PRODUCTS_CSV_PATH, index_col='index')
     print('Read products data\tTime taken: ', time.time() - start_time)
 
 def init_image_embeddings():
