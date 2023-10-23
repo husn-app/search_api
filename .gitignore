@@ -6,3 +6,4 @@ products.csv
 assets-*/*
 __pycache__/*
 *.pt
+!image_embeddings_kaggle.pt
