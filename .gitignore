@@ -5,4 +5,4 @@ products.csv
 *.zip
 assets-*/*
 __pycache__/*
-
+*.pt
