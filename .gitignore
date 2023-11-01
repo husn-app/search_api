@@ -4,7 +4,7 @@ products.csv
 .DS_Store
 *.zip
 assets-*/*
-__pycache__/*
+**/__pycache__/*
 *.pt
 assets-224-filename-kaggle.csv
 products_minimal.csv
