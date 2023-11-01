@@ -88,4 +88,4 @@ def get_product(index):
     return render_template('product.html', current_product=final_df.iloc[index].to_dict(), products=products, topk_scores=topk_scores.tolist())
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
