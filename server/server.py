@@ -8,8 +8,6 @@ model, preprocess, tokenizer = None, None, None
 final_df = None
 image_embeddings = None
 
-app = Flask(__name__)
-
 def init_model():
     global model, preprocess, tokenizer
     print('Initializing model...')
@@ -25,7 +23,7 @@ def init_final_df():
     start_time = time.time()
     PRODUCTS_CSV_PATH = '../products_minimal.csv'
 
-    final_df = pd.read_csv(PRODUCTS_CSV_PATH, index_col='index')
+    final_df = pd.read_csv(PRODUCTS_CSV_PATH)
     print('Read products data\tTime taken: ', time.time() - start_time)
 
 def init_image_embeddings():
@@ -36,12 +34,23 @@ def init_image_embeddings():
     image_embeddings /= image_embeddings.norm(dim=-1, keepdim=True)
     print('Read image embeddings.\nTime Taken: ', time.time() - start_time)
 
-
 def init_ml():
     init_final_df()
     
     init_model()
     init_image_embeddings()
+
+init_ml()
+# Assert model
+assert model is not None
+assert preprocess is not None
+assert tokenizer is not None 
+# Assert df
+assert final_df is not None
+# Assert embeddings
+assert image_embeddings is not None
+
+app = Flask(__name__)
 
 @app.route('/')
 def home():
@@ -79,13 +88,4 @@ def get_product(index):
     return render_template('product.html', current_product=final_df.iloc[index].to_dict(), products=products, topk_scores=topk_scores.tolist())
 
 if __name__ == '__main__':
-    init_ml()
-    # Assert model
-    assert model is not None
-    assert preprocess is not None
-    assert tokenizer is not None 
-    # Assert df
-    assert final_df is not None
-    # Assert embeddings
-    assert image_embeddings is not None
-    app.run(debug=True)
+    app.run()
