@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, redirect
 import open_clip
 import pandas as pd
 import time
@@ -78,9 +78,23 @@ def get_query(query):
 
 
 
-@app.route('/product/<int:index>')
+@app.route('/product/<index>')
 def get_product(index):
     global image_embeddings, final_df
+
+    if index.startswith('myntra-'):
+        index = index[len('myntra-'):]
+        index = int(index)
+        index_list = final_df[final_df['productId'] == index]['index'].tolist()
+        if not index_list:
+            return redirect('/')
+        index = index_list[0]
+
+    try:
+        index = int(index)
+    except Exception as e:
+        print(e)
+        return redirect('/')
 
     topk_indices, topk_scores = getTopK(image_embeddings[index])
     products = final_df.iloc[topk_indices.tolist()].to_dict('records')
