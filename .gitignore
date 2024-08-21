@@ -7,4 +7,4 @@ assets-*/*
 **/__pycache__/*
 assets-224-filename-kaggle.csv
 .venv/*
-play.ipynb
+*/play.ipynb

@@ -21,7 +21,7 @@ def init_final_df():
     global final_df
     print('Reading products data...')
     start_time = time.time()
-    PRODUCTS_CSV_PATH = '../products_minimal.csv'
+    PRODUCTS_CSV_PATH = 'products_minimal.csv'
 
     final_df = pd.read_csv(PRODUCTS_CSV_PATH)
     print('Read products data\tTime taken: ', time.time() - start_time)
@@ -30,7 +30,7 @@ def init_image_embeddings():
     global image_embeddings
     print('Reading image embeddings...')
     start_time = time.time()
-    image_embeddings = torch.load('../image_embeddings_kaggle.pt', map_location=torch.device('cpu'))
+    image_embeddings = torch.load('image_embeddings_kaggle.pt', map_location=torch.device('cpu'))
     image_embeddings /= image_embeddings.norm(dim=-1, keepdim=True)
     print('Read image embeddings.\nTime Taken: ', time.time() - start_time)
 
