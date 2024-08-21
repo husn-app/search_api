@@ -1,0 +1,2 @@
+image_embeddings_kaggle.pt filter=lfs diff=lfs merge=lfs -text
+products_minimal.csv filter=lfs diff=lfs merge=lfs -text
