@@ -8,3 +8,5 @@ assets-*/*
 *.pt
 assets-224-filename-kaggle.csv
 products_minimal.csv
+.venv/*
+play.ipynb
