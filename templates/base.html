@@ -29,15 +29,18 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StyleSense</title>
+    <title>Husn</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
+            background-image: url('/static/husn-grainy-background.svg') !important;
+            background-size: cover;
+            /* background-repeat: no-repeat; */
+            background-attachment: fixed;
         }
         .navbar {
-            background-color: #ff69b4;
+            /* background-color: #E0CECB; */
         }
         .navbar-brand {
             font-weight: bold;
@@ -47,7 +50,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="/">StyleSense</a>
+        <a class="navbar-brand" href="/" style="font-family: 'Times New Roman', Times, serif; color:black; font-size:xx-large;">Husn</a>
     </nav>
     <div class="container">
         {% block content %}

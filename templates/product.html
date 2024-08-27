@@ -7,7 +7,7 @@
     {% endwith %}
 </div>
 
-{% with product=current_product %}
+{% with product=current_product, is_main_product=True %}
 {% include 'product-view.html' %}
 {% endwith %}
 
