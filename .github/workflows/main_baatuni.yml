@@ -16,6 +16,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true ## Enable downloading embeddings with LFS 
+
 
       - name: Set up Python version
         uses: actions/setup-python@v5
