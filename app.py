@@ -4,6 +4,8 @@ import pandas as pd
 import time
 import torch
 
+torch.set_grad_enabled(False)
+
 model, preprocess, tokenizer = None, None, None
 final_df = None
 image_embeddings = None
