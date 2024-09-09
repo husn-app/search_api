@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, redirect
+from flask import Flask, jsonify, render_template, redirect, request
 import open_clip
 import pandas as pd
 import time
@@ -64,11 +64,9 @@ def getTopK(base_embedding, K=25):
     topk_indices = probs.topk(K).indices
     return topk_indices, probs[topk_indices]
 
-@app.route('/query/<query>')
-def get_query(query):
-    global tokenizer, model, final_df
+def process_query(query):
     if not query:
-        return "HTTP 400 Bad Request: Query cannot be empty", 400
+        return None, "Query cannot be empty", 400
     
     query_encoding = tokenizer(query)
     query_embedding = model.encode_text(query_encoding)
@@ -76,32 +74,62 @@ def get_query(query):
 
     topk_indices, topk_scores = getTopK(query_embedding)
     products = final_df.iloc[topk_indices.tolist()].to_dict('records')
-    return render_template('query.html', query=query, products=products, topk_scores=topk_scores.tolist())
+    return {"query": query, "products": products, "scores": topk_scores.tolist()}, None, 200
 
+@app.route('/query/<query>')
+def get_query(query):
+    result, error, status_code = process_query(query)
+    if error:
+        return error, status_code
+    return render_template('query.html', **result)
 
+@app.route('/api/query', methods=['POST'])
+def api_query():
+    data = request.json
+    query = data.get('query')
+    result, error, status_code = process_query(query)
+    if error:
+        return jsonify({"error": error}), status_code
+    return jsonify(result)
 
-@app.route('/product/<index>')
-def get_product(index):
+def process_product(index):
     global image_embeddings, final_df
 
-    if index.startswith('myntra-'):
+    if isinstance(index, str) and index.startswith('myntra-'):
         index = index[len('myntra-'):]
         index = int(index)
         index_list = final_df[final_df['productId'] == index]['index'].tolist()
         if not index_list:
-            return redirect('/')
+            return None, "Product not found", 404
         index = index_list[0]
 
     try:
         index = int(index)
-    except Exception as e:
-        print(e)
-        return redirect('/')
+    except ValueError:
+        return None, "Invalid product index", 400
 
     topk_indices, topk_scores = getTopK(image_embeddings[index])
     products = final_df.iloc[topk_indices.tolist()].to_dict('records')
-    # Implement your logic here
-    return render_template('product.html', current_product=final_df.iloc[index].to_dict(), products=products, topk_scores=topk_scores.tolist())
+    current_product = final_df.iloc[index].to_dict()
+    return {
+        "current_product": current_product,
+        "products": products,
+        "topk_scores": topk_scores.tolist()
+    }, None, 200
+
+@app.route('/product/<index>')
+def get_product(index):
+    result, error, status_code = process_product(index)
+    if error:
+        return redirect('/')
+    return render_template('product.html', **result)
+
+@app.route('/api/product/<index>')
+def api_product(index):
+    result, error, status_code = process_product(index)
+    if error:
+        return jsonify({"error": error}), status_code
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(debug=True)
