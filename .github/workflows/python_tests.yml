@@ -1,0 +1,34 @@
+name: Python Tests
+
+# Trigger the workflow on push or pull request events
+on:
+  push:
+    branches:
+      - main   # Specify the branches to trigger tests (e.g., main or any other branch)
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest   # Specify the environment to run the tests on
+    
+    strategy:
+      matrix:
+        python-version: [3.11]  # Define the Python versions you want to test against
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3  # Checkout the repository code
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Run Tests
+      run: |
+        python -m unittest discover tests   # Run the unittests located in the tests directory
