@@ -20,6 +20,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3  # Checkout the repository code
+    
+    - name: Install Git LFS
+      run: |
+        sudo apt-get install git-lfs
+        git lfs install
+    
+    - name: Pull Git LFS files
+      run: git lfs pull   # Pull the large files tracked by Git LFS
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
