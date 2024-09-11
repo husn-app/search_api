@@ -77,7 +77,7 @@ def process_query(query):
     return {"query": query, "products": products, "scores": topk_scores.tolist()}, None, 200
 
 @app.route('/query/<query>')
-def get_query(query):
+def web_query(query):
     result, error, status_code = process_query(query)
     if error:
         return error, status_code
@@ -118,7 +118,7 @@ def process_product(index):
     }, None, 200
 
 @app.route('/product/<index>')
-def get_product(index):
+def web_product(index):
     result, error, status_code = process_product(index)
     if error:
         return redirect('/')

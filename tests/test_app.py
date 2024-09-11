@@ -12,9 +12,7 @@ class FlaskTestCase(unittest.TestCase):
         response = self.app.post('/api/query', json={'query': 'red dress'})
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertIn('query', data)
-        self.assertIn('products', data)
-        self.assertIn('scores', data)
+        self.assertEqual(set(data.keys()), {'query', 'products', 'scores'})
 
     def test_api_query_empty(self):
         response = self.app.post('/api/query', json={'query': ''})
@@ -26,9 +24,7 @@ class FlaskTestCase(unittest.TestCase):
         response = self.app.get('/api/product/0')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertIn('current_product', data)
-        self.assertIn('products', data)
-        self.assertIn('topk_scores', data)
+        self.assertEqual(set(data.keys()), {'current_product', 'products', 'topk_scores'})
 
     def test_api_product_invalid(self):
         response = self.app.get('/api/product/invalid')
