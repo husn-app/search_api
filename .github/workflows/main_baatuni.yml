@@ -16,9 +16,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          lfs: true ## Enable downloading embeddings with LFS 
-
 
       - name: Set up Python version
         uses: actions/setup-python@v5
@@ -69,4 +66,4 @@ jobs:
         with:
           app-name: 'baatuni'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_45094DFEB1C148EDB32517348C05E4AE }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_09EABCE1CA004962915AF317DC9CF4AA }}
