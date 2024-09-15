@@ -63,7 +63,7 @@ app = Flask(__name__)
 def home():
     return render_template('landingpage.html')
 
-def getTopK(base_embedding, K=25):
+def getTopK(base_embedding, K=100):
     global image_embeddings
     probs = torch.nn.functional.cosine_similarity(image_embeddings, base_embedding.view(1, 512))
     topk_indices = probs.topk(K).indices
