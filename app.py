@@ -9,6 +9,7 @@ torch.set_grad_enabled(False)
 model, preprocess, tokenizer = None, None, None
 final_df = None
 image_embeddings = None
+similar_products_cached = None
 
 def init_model():
     global model, preprocess, tokenizer
@@ -37,10 +38,13 @@ def init_image_embeddings():
     print('Read image embeddings.\nTime Taken: ', time.time() - start_time)
 
 def init_ml():
+    global similar_products_cached
     init_final_df()
     
     init_model()
     init_image_embeddings()
+    similar_products_cached = torch.load('similar_products_cached.pt')
+    
 
 init_ml()
 # Assert model
@@ -51,6 +55,7 @@ assert tokenizer is not None
 assert final_df is not None
 # Assert embeddings
 assert image_embeddings is not None
+assert similar_products_cached is not None
 
 app = Flask(__name__)
 
@@ -93,7 +98,7 @@ def api_query():
     return jsonify(result)
 
 def process_product(index):
-    global image_embeddings, final_df
+    global image_embeddings, final_df, similar_products_cached
 
     if isinstance(index, str) and index.startswith('myntra-'):
         index = index[len('myntra-'):]
@@ -108,13 +113,16 @@ def process_product(index):
     except ValueError:
         return None, "Invalid product index", 400
 
-    topk_indices, topk_scores = getTopK(image_embeddings[index])
+    # topk_indices, topk_scores = getTopK(image_embeddings[index])
+     # We use cached similar products, instead of computing similarity online. 
+    topk_indices = similar_products_cached[index][:25]
+
     products = final_df.iloc[topk_indices.tolist()].to_dict('records')
     current_product = final_df.iloc[index].to_dict()
     return {
         "current_product": current_product,
         "products": products,
-        "topk_scores": topk_scores.tolist()
+        "topk_scores": []
     }, None, 200
 
 @app.route('/product/<index>')
