@@ -115,7 +115,7 @@ def process_product(index):
 
     # topk_indices, topk_scores = getTopK(image_embeddings[index])
      # We use cached similar products, instead of computing similarity online. 
-    topk_indices = similar_products_cached[index][:25]
+    topk_indices = similar_products_cached[index][:100]
 
     products = final_df.iloc[topk_indices.tolist()].to_dict('records')
     current_product = final_df.iloc[index].to_dict()
