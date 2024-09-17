@@ -88,7 +88,7 @@ def process_query(query):
     query_embedding = F.normalize(model.encode_text(query_encoding), dim=-1).unsqueeze(0)
 
     ## faiss_index.search expects batched inputs.
-    topk_indices, topk_scores = faiss_index.search(query_embeddings.detach().numpy(),  100) 
+    topk_indices, topk_scores = faiss_index.search(query_embedding.detach().numpy(),  100) 
     topk_indices, topk_scores = topk_indices[0], topk_scores[0]
 
     products = final_df.iloc[topk_indices].to_dict('records')
