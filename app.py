@@ -85,7 +85,7 @@ def process_query(query):
         return None, "Query cannot be empty", 400
     
     query_encoding = tokenizer(query)
-    query_embedding = F.normalize(model.encode_text(query_encoding), dim=-1).unsqueeze(0)
+    query_embedding = F.normalize(model.encode_text(query_encoding), dim=-1) # shape = [1, DIM]
 
     ## faiss_index.search expects batched inputs.
     topk_indices, topk_scores = faiss_index.search(query_embedding.detach().numpy(),  100) 
