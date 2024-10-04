@@ -4,12 +4,17 @@ import time
 import torch
 import torch.nn.functional as F
 import faiss
+import os
 
 torch.set_grad_enabled(False)
 
 model, preprocess, tokenizer = None, None, None
 image_embeddings = None
 faiss_index = None
+
+DEPLOYMENT_TYPE = os.environ.get('DEPLOYMENT_TYPE', 'LOCAL')
+
+ROOT_DIR = '/husn-cool-storage/' if (DEPLOYMENT_TYPE == 'PROD') else './'
 
 def init_model():
     global model, preprocess, tokenizer
@@ -24,7 +29,7 @@ def init_image_embeddings():
     global image_embeddings
     print('Reading image embeddings...')
     start_time = time.time()
-    image_embeddings = F.normalize(torch.load('image_embeddings_kaggle.pt'), dim=-1).detach().numpy()
+    image_embeddings = F.normalize(torch.load(ROOT_DIR + 'image_embeddings_kaggle.pt'), dim=-1).detach().numpy()
     print('Read image embeddings.\nTime Taken: ', time.time() - start_time)
     
 def init_faiss_index():
@@ -69,11 +74,18 @@ def process_query(query):
     topk_scores, topk_indices = topk_scores[0], topk_indices[0]
 
     return {"query": query, "indices": topk_indices.tolist(), "scores": topk_scores.tolist()}, None, 200
-
 @app.route('/api/query', methods=['GET'])
 def api_query():
-    data = request.json
-    query = data.get('query')
+    # Try to get query from JSON data first
+    data = request.get_json(silent=True)
+    if data and 'query' in data:
+        query = data.get('query')
+    else:
+        # If not in JSON, try to get from query parameters
+        query = request.args.get('query')
+    if not query:
+        return jsonify({"error": "Query parameter is missing"}), 400
+
     result, error, status_code = process_query(query)
     if error:
         return jsonify({"error": error}), status_code
