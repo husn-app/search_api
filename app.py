@@ -8,7 +8,7 @@ import os
 
 torch.set_grad_enabled(False)
 
-model, preprocess, tokenizer = None, None, None
+model, tokenizer = None, None
 image_embeddings = None
 faiss_index = None
 
@@ -17,11 +17,16 @@ DEPLOYMENT_TYPE = os.environ.get('DEPLOYMENT_TYPE', 'LOCAL')
 ROOT_DIR = '/husn-cool-storage/' if (DEPLOYMENT_TYPE == 'PROD') else './'
 
 def init_model():
-    global model, preprocess, tokenizer
+    global model, tokenizer
     print('Initializing model...')
     start_time = time.time()
-    model, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
+    
+    # initate model.
+    model, _, _ = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
     model.visual = None
+    model = torch.compile(model)
+    
+    # initate tokenizer.
     tokenizer = open_clip.get_tokenizer('ViT-B-32')
     print('Initialized model.\tTime Taken: ', time.time() - start_time)
 
@@ -46,7 +51,6 @@ def init_ml():
 init_ml()
 # Assert model
 assert model is not None
-assert preprocess is not None
 assert tokenizer is not None 
 # Assert embeddings
 assert image_embeddings is not None
